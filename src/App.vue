@@ -1,32 +1,60 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <div class="d-flex align-center" v-if="this.$store.state.connectedUser.laniste">
+        Bienvenue {{this.$store.state.connectedUser.laniste}} !
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <div class="d-flex align-center" v-if="this.$store.state.connectedUser.laniste">
+        {{this.$store.state.connectedUser.deniers}} deniers
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <router-link to="/" v-if="this.$store.state.connectedUser.laniste"><v-btn depressed elevation="2" @click="disconnect">DECONNEXION</v-btn></router-link>
+
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
+<script>
+
+export default {
+  name: 'App',
+
+  data(){
+    return {
+      user: this.$store.state.connectedUser,
+      ludis: this.$store.state.ludis
+    }
+  },
+  methods: {
+    disconnect() {
+      this.user = {}
+      this.ludis = []
+      this.$store.commit("updateConnectedUser", this.user)
+      this.$store.commit("updateLudisOfConnectedUser", this.ludis)
+    }
+  }
+
+};
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+html {
+  width: 75%;
+  margin:auto;
 }
 
-#nav {
-  padding: 30px;
-}
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
